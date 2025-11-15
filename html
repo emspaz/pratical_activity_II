@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matheus Paz | Soluções Digitais e Design</title>
+    <!-- Fonte "Inter" conforme boas práticas, carregada do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /*
+         * =================================================================
+         * 1. SISTEMA DE DESIGN (CUSTOM CSS VARIABLES)
+         * =================================================================
+         */
+        :root {
+            /* Paleta de Cores (Mínimo de 8 cores) */
+            --color-primary-500: #3b82f6; /* Azul Principal - Identidade da Marca */
+            --color-primary-600: #2563eb;
+            --color-secondary-500: #10b981; /* Verde Secundário - Ação/Sucesso */
+            --color-secondary-600: #059669;
+            --color-neutral-50: #f9fafb; /* Fundo Leve */
+            --color-neutral-100: #f3f4f6;
+            --color-neutral-600: #4b5563; /* Texto */
+            --color-neutral-900: #1f2937; /* Títulos */
+            --color-success: #22c55e;
+            --color-warning: #facc15;
+            --color-error: #ef4444;
+
+            /* Tipografia Hierárquica (Mínimo de 5 tamanhos de fonte) */
+            --font-size-xs: 0.75rem; /* 12px */
+            --font-size-sm: 0.875rem; /* 14px */
+            --font-size-base: 1rem; /* 16px - Padrão */
+            --font-size-lg: 1.25rem; /* 20px */
+            --font-size-xl: 1.5rem; /* 24px */
+            --font-size-2xl: 2rem; /* 32px */
+            --font-family: 'Inter', sans-serif;
+
+            /* Espaçamento Modular (Múltiplos de 8px) */
+            --space-none: 0;
+            --space-xs: 4px;   /* 0.25rem */
+            --space-sm: 8px;   /* 0.5rem - Obrigatório */
+            --space-md: 16px;  /* 1rem - Obrigatório */
+            --space-lg: 24px;  /* 1.5rem - Obrigatório */
+            --space-xl: 32px;  /* 2rem - Obrigatório */
+            --space-2xl: 48px; /* 3rem - Obrigatório */
+            --space-3xl: 64px; /* 4rem - Obrigatório */
+
+            /* Outras Variáveis de Estilo */
+            --border-radius: 0.5rem; /* Cantos arredondados */
+            --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --transition-speed: 0.2s;
+        }
+
+        /*
+         * =================================================================
+         * 2. ESTILOS GERAIS E RESET
+         * =================================================================
+         */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--color-neutral-600);
+            background-color: var(--color-neutral-50);
+            min-height: 100vh;
+        }
+
+        /* Títulos */
+        h1, h2, h3 {
+            color: var(--color-neutral-900);
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+        }
+        h1 { font-size: var(--font-size-2xl); }
+        h2 { font-size: var(--font-size-xl); }
+        h3 { font-size: var(--font-size-lg); }
+
+        p {
+            margin-bottom: var(--space-md);
+        }
+
+        /*
+         * =================================================================
+         * 3. LAYOUT PRINCIPAL (CSS GRID)
+         * =================================================================
+         */
+        .container {
+            width: 90%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-none);
+        }
+
+        /* Estrutura Grid Principal */
+        .main-layout {
+            display: grid;
+            gap: var(--space-xl);
+            grid-template-areas:
+                "header"
+                "main"
+                "sidebar"
+                "footer";
+        }
+
+        header { grid-area: header; }
+        main { grid-area: main; }
+        aside { grid-area: sidebar; }
+        footer { grid-area: footer; }
+
+        /*
+         * =================================================================
+         * 4. GRID CUSTOMIZADO (12 COLUNAS)
+         * =================================================================
+         */
+        .grid-12-col {
+            display: grid;
+            gap: var(--space-md); /* Espaçamento entre colunas */
+            grid-template-columns: repeat(12, 1fr);
+            margin-bottom: var(--space-2xl);
+        }
+
+        /* Classes de Colunas (usando Flexbox internamente para cards) */
+        .col-span-12 { grid-column: span 12; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-3 { grid-column: span 3; }
+
+        /*
+         * =================================================================
+         * 5. BREAKPOINTS RESPONSIVOS (MÍNIMO DE 5)
+         * - xs: 0px (default)
+         * - sm: 576px
+         * - md: 768px
+         * - lg: 992px
+         * - xl: 1200px
+         * =================================================================
+         */
+
+        /* Breakpoint SM: 576px (Celulares grandes / Tablets pequenos) */
+        @media (min-width: 576px) {
+            .grid-12-col .card-item {
+                grid-column: span 6; /* 2 Colunas de cards */
+            }
+        }
+
+        /* Breakpoint MD: 768px (Tablets / Telas horizontais) */
+        @media (min-width: 768px) {
+            /* Layout Principal: Coloca a sidebar ao lado em telas maiores */
+            .main-layout {
+                grid-template-areas:
+                    "header header"
+                    "main sidebar"
+                    "footer footer";
+                grid-template-columns: 3fr 1fr;
+            }
+
+            /* 12-col Grid */
+            .grid-12-col .col-span-6-md { grid-column: span 6; }
+            .grid-12-col .col-span-4-md { grid-column: span 4; }
+
+            .grid-12-col .card-item {
+                grid-column: span 4; /* 3 Colunas de cards */
+            }
+        }
+
+        /* Breakpoint LG: 992px (Desktops pequenos) */
+        @media (min-width: 992px) {
+            h1 { font-size: 2.5rem; }
+            .grid-12-col .col-span-3-lg { grid-column: span 3; }
+            .grid-12-col .card-item {
+                grid-column: span 3; /* 4 Colunas de cards */
+            }
+        }
+
+        /* Breakpoint XL: 1200px (Desktops grandes) */
+        @media (min-width: 1200px) {
+            /* Layout Principal: Aumenta o espaçamento */
+            .main-layout {
+                gap: var(--space-3xl);
+            }
+        }
+
+        /*
+         * =================================================================
+         * 6. NAVEGAÇÃO SOFISTICADA E INTERATIVA (HEADER)
+         * =================================================================
+         */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-none);
+            background-color: #fff;
+            border-bottom: 1px solid var(--color-neutral-100);
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-primary-500);
+            text-decoration: none;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            gap: var(--space-lg);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--color-neutral-600);
+            padding: var(--space-sm) var(--space-xs);
+            transition: color var(--transition-speed);
+        }
+        .nav-link:hover {
+            color: var(--color-primary-500);
+        }
+
+        /* Submenu Dropdown */
+        .nav-item.dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 160px;
+            background-color: #fff;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            padding: var(--space-xs) var(--space-none);
+            z-index: 10;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: var(--space-sm) var(--space-md);
+            text-decoration: none;
+            color: var(--color-neutral-600);
+        }
+        .dropdown-content a:hover {
+            background-color: var(--color-neutral-100);
+            color: var(--color-primary-500);
+        }
+
+        /* Menu Hambúrguer (Mobile) */
+        .hamburger-menu {
+            display: none; /* Esconde por padrão em desktop */
+            cursor: pointer;
+            padding: var(--space-sm);
+        }
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px 0;
+            background-color: var(--color-neutral-900);
+            transition: var(--transition-speed);
+            border-radius: 2px;
+        }
+
+        /* Responsividade da Navegação */
+        @media (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+            }
+
+            .nav-list {
+                display: none; /* Esconde a navegação em mobile */
+                flex-direction: column;
+                position: absolute;
+                top: 60px; /* Abaixo do header */
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                box-shadow: var(--box-shadow);
+                padding: var(--space-md) var(--space-lg);
+                z-index: 5;
+            }
+
+            .nav-list.active {
+                display: flex; /* Mostra quando ativo */
+            }
+
+            .nav-item {
+                border-bottom: 1px solid var(--color-neutral-100);
+            }
+            .nav-item:last-child {
+                border-bottom: none;
+            }
+
+            /* Submenu em Mobile */
+            .nav-item.dropdown:hover .dropdown-content,
+            .nav-item.dropdown .dropdown-content {
+                display: block;
+                position: static; /* Ajusta para fluxo vertical */
+                box-shadow: none;
+                padding: var(--space-none);
+                border-radius: var(--space-none);
+                background-color: var(--color-neutral-50);
+                width: 100%;
+            }
+            .dropdown-content a {
+                padding-left: var(--space-2xl); /* Indentação */
+            }
+        }
+
+        /*
+         * =================================================================
+         * 7. COMPONENTES DE INTERFACE
+         * =================================================================
+         */
+
+        /* Componente Flexbox: Cards Responsivos */
+        .card-system {
+            /* Usa Flexbox internamente para controle de conteúdo dentro do Grid */
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--color-neutral-100);
+            border-radius: var(--border-radius);
+            background-color: #fff;
+            box-shadow: var(--box-shadow);
+            padding: var(--space-lg);
+            transition: transform var(--transition-speed);
+        }
+
+        .card-system:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .card-title {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+        }
+        .card-body {
+            flex-grow: 1; /* Ocupa espaço disponível */
+            margin-bottom: var(--space-md);
+        }
+
+        /* Botões com Estados Visuais */
+        .btn {
+            padding: var(--space-md) var(--space-lg);
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary-500);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-600);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--color-primary-500);
+            outline-offset: 2px;
+        }
+
+        .btn-primary:active {
+            background-color: var(--color-primary-600);
+            transform: scale(0.99);
+        }
+
+        .btn:disabled {
+            background-color: var(--color-neutral-100);
+            color: var(--color-neutral-600);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Formulários Estilizados com Validação Visual */
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--color-neutral-100);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary-500);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25); /* Sombra de foco */
+        }
+
+        /* Validação Visual */
+        .form-control.is-invalid {
+            border-color: var(--color-error);
+        }
+        .form-control.is-valid {
+            border-color: var(--color-success);
+        }
+        .feedback-message {
+            font-size: var(--font-size-xs);
+            margin-top: var(--space-xs);
+        }
+        .feedback-message.error {
+            color: var(--color-error);
+        }
+        .feedback-message.success {
+            color: var(--color-success);
+        }
+
+        /* Feedback Components: Alerts, Toasts, Modals */
+
+        /* Alerts */
+        .alert {
+            padding: var(--space-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-lg);
+            font-size: var(--font-size-sm);
+            border-left: 5px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .alert-info {
+            background-color: #eff6ff;
+            border-left-color: var(--color-primary-500);
+            color: var(--color-primary-600);
+        }
+        .alert-error {
+            background-color: #fef2f2;
+            border-left-color: var(--color-error);
+            color: var(--color-error);
+        }
+        .alert button {
+            background: none;
+            border: none;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            color: inherit;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: var(--space-xl);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--color-neutral-100);
+            padding-bottom: var(--space-sm);
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            z-index: 1010;
+        }
+        .toast {
+            display: none;
+            background-color: var(--color-success);
+            color: white;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: var(--space-md);
+            animation: fadeInOut 5s ease forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            10% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Badges e Tags para Categorização */
+        .badge {
+            display: inline-block;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 9999px; /* Pill shape */
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: var(--space-sm);
+        }
+        .badge-primary {
+            background-color: #bfdbfe;
+            color: var(--color-primary-600);
+        }
+        .badge-secondary {
+            background-color: #d1fae5;
+            color: var(--color-secondary-600);
+        }
+        .badge-neutral {
+            background-color: var(--color-neutral-100);
+            color: var(--color-neutral-600);
+        }
+
+        /* Utilitário Flexbox (para componentes internos) */
+        .flex-row {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container Global para Margens -->
+    <div class="container main-layout">
+
+        <!-- 1. HEADER E NAVEGAÇÃO -->
+        <header>
+            <nav class="navbar">
+                <a href="#" class="logo">Matheus Paz</a>
+
+                <!-- Navegação Principal -->
+                <ul class="nav-list" id="navList">
+                    <li class="nav-item"><a href="#" class="nav-link">Início</a></li>
+                    <!-- Dropdown com Submenu -->
+                    <li class="nav-item dropdown" onmouseover="toggleDropdown(this, true)" onmouseout="toggleDropdown(this, false)">
+                        <a href="#" class="nav-link">Serviços <span style="font-size: 0.7em;">&#9662;</span></a>
+                        <div class="dropdown-content">
+                            <a href="#">Desenvolvimento Web</a>
+                            <a href="#">Design UX/UI</a>
+                            <a href="#">Consultoria Técnica</a>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link">Portfólio</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
+                    <li class="nav-item"><a href="#" class="btn btn-primary" style="padding: 6px 12px;">Contato</a></li>
+                </ul>
+
+                <!-- Menu Hambúrguer (Mobile) -->
+                <div class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </header>
+
+        <!-- 2. CONTEÚDO PRINCIPAL (MAIN) -->
+        <main>
+            <h1>Soluções Digitais com Foco em Performance e Design</h1>
+            <p>Olá, sou Matheus Paz. Trabalho criando experiências digitais robustas, utilizando as melhores práticas de desenvolvimento front-end. Este site demonstra um Design System que garante adaptabilidade total em qualquer dispositivo.</p>
+
+            <!-- Seção Cards Responsivos (Portfólio de Projetos) -->
+            <section>
+                <h2>Últimos Projetos de Destaque</h2>
+                <div class="grid-12-col">
+                    <!-- Cards (Colunas mudam com os breakpoints: 12 -> 6 -> 4 -> 3) -->
+                    <div class="card-item col-span-12 col-span-6-md col-span-3-lg">
+                        <div class="card-system">
+                            <div class="flex-row" style="margin-bottom: var(--space-sm);">
+                                <span class="badge badge-primary">E-commerce</span>
+                                <span class="badge badge-neutral">Grid</span>
+                            </div>
+                            <h3 class="card-title">Loja Virtual Moderna</h3>
+                            <div class="card-body">
+                                <p>Desenvolvimento de uma plataforma de vendas de alta performance com SEO otimizado e checkout rápido.</p>
+                            </div>
+                            <button class="btn btn-primary">Ver Case</button>
+                        </div>
+                    </div>
+
+                    <div class="card-item col-span-12 col-span-6-md col-span-3-lg">
+                        <div class="card-system">
+                            <div class="flex-row" style="margin-bottom: var(--space-sm);">
+                                <span class="badge badge-secondary">Interface</span>
+                                <span class="badge badge-neutral">Flexbox</span>
+                            </div>
+                            <h3 class="card-title">Dashboard Analítico</h3>
+                            <div class="card-body">
+                                <p>Criação de um painel de controle complexo e responsivo para visualização de grandes volumes de dados.</p>
+                            </div>
+                            <button class="btn btn-primary">Ver Case</button>
+                        </div>
+                    </div>
+
+                    <div class="card-item col-span-12 col-span-6-md col-span-3-lg">
+                        <div class="card-system">
+                            <div class="flex-row" style="margin-bottom: var(--space-sm);">
+                                <span class="badge badge-primary">Branding</span>
+                                <span class="badge badge-neutral">Design System</span>
+                            </div>
+                            <h3 class="card-title">Landing Page Institucional</h3>
+                            <div class="card-body">
+                                <p>Criação de identidade visual e implementação de página de conversão com foco em captura de leads.</p>
+                            </div>
+                            <button class="btn btn-primary">Ver Case</button>
+                        </div>
+                    </div>
+
+                    <div class="card-item col-span-12 col-span-6-md col-span-3-lg">
+                        <div class="card-system">
+                            <div class="flex-row" style="margin-bottom: var(--space-sm);">
+                                <span class="badge badge-secondary">Mobile</span>
+                                <span class="badge badge-neutral">Componentes</span>
+                            </div>
+                            <h3 class="card-title">App de Gerenciamento</h3>
+                            <div class="card-body">
+                                <p>Design de interface mobile intuitiva e construção de componentes reutilizáveis para iOS e Android.</p>
+                            </div>
+                            <button class="btn btn-primary">Ver Case</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Componentes UI (Exemplos) -->
+            <section>
+                <h2>Componentes de Interação (Demonstração)</h2>
+
+                <!-- Alertas (Feedback) -->
+                <h3>Feedback e Ações</h3>
+                <div class="flex-row" style="align-items: flex-start; margin-bottom: var(--space-xl);">
+                    <div class="alert alert-info" style="width: 100%;">
+                        <span>Consulte o meu Design System para todas as especificações de cores e tipografia.</span>
+                        <button onclick="this.parentElement.style.display='none'">&times;</button>
+                    </div>
+                    <div class="alert alert-error" style="width: 100%;">
+                        <span>Ops! Houve um erro de carregamento. Tente novamente mais tarde.</span>
+                        <button onclick="this.parentElement.style.display='none'">&times;</button>
+                    </div>
+                </div>
+                <div class="flex-row" style="margin-bottom: var(--space-xl);">
+                    <button class="btn btn-primary" onclick="showToast('Mensagem de confirmação enviada!')">Mostrar Toast Sucesso</button>
+                    <button class="btn btn-primary" onclick="openModal()">Detalhes Adicionais (Modal)</button>
+                    <button class="btn btn-primary" disabled>Botão Indisponível</button>
+                </div>
+
+                <!-- Formulário Estilizado com Validação Visual -->
+                <h3>Inicie seu Projeto</h3>
+                <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                    <div class="grid-12-col">
+                        <div class="col-span-12 col-span-6-md">
+                            <div class="form-group">
+                                <label for="nome">Nome Completo</label>
+                                <input type="text" id="nome" name="nome" class="form-control" required placeholder="Seu nome">
+                            </div>
+                        </div>
+                        <div class="col-span-12 col-span-6-md">
+                            <div class="form-group">
+                                <label for="email">E-mail Profissional</label>
+                                <input type="email" id="email" name="email" class="form-control" required placeholder="seu@email.com">
+                                <p class="feedback-message error" id="emailFeedback" style="display: none;">E-mail inválido.</p>
+                            </div>
+                        </div>
+                        <div class="col-span-12">
+                            <div class="form-group">
+                                <label for="mensagem">Detalhes do Projeto (Mín 10 caracteres)</label>
+                                <textarea id="mensagem" name="mensagem" class="form-control" rows="4" required placeholder="Descreva brevemente sua necessidade..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-span-12">
+                            <button type="submit" class="btn btn-primary">Solicitar Orçamento</button>
+                        </div>
+                    </div>
+                </form>
+
+            </section>
+        </main>
+
+        <!-- 3. SIDEBAR (COMPLEMENTAR AO LAYOUT GRID) -->
+        <aside>
+            <div style="background: white; padding: var(--space-lg); border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                <h3 style="margin-top: 0;">Minhas Habilidades</h3>
+                <p><strong>Desenvolvimento Web:</strong> HTML, CSS (Grid/Flexbox), JavaScript.</p>
+                <p><strong>Frameworks:</strong> React, Angular, Vue (Expertise).</p>
+                <p><strong>Design:</strong> Figma, Adobe XD, Prototipação.</p>
+                <div style="margin-top: var(--space-md);">
+                    <span class="badge badge-primary">Acessibilidade</span>
+                    <span class="badge badge-secondary">SEO</span>
+                    <span class="badge badge-neutral">Performance</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 4. FOOTER -->
+        <footer>
+            <div style="text-align: center; border-top: 1px solid var(--color-neutral-100); padding-top: var(--space-md); font-size: var(--font-size-sm);">
+                &copy; 2025 Matheus Paz | Todos os direitos reservados.
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Feedback Component: Modal -->
+    <div class="modal-overlay" id="myModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0;">Fale Conosco</h3>
+                <button class="btn" style="background: none; padding: 0; color: var(--color-neutral-600);" onclick="closeModal()">&times;</button>
+            </div>
+            <p>Se você tem um projeto em mente, utilize o formulário abaixo ou envie um e-mail diretamente. Retorno em até 24 horas.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Feedback Component: Toast Container -->
+    <div id="toast-container">
+        <!-- Toasts serão injetados aqui via JavaScript -->
+    </div>
+
+    <!-- JAVASCRIPT para Interatividade -->
+    <script>
+        // Função para alternar o menu mobile (Hamburger)
+        function toggleMobileMenu() {
+            const navList = document.getElementById('navList');
+            const hamburger = document.getElementById('hamburgerMenu');
+            navList.classList.toggle('active');
+            hamburger.classList.toggle('open');
+            // Opcional: Adicionar classe para animação do hambúrguer, se necessário
+        }
+
+        // Função para Dropdown (para telas não-touch)
+        function toggleDropdown(element, show) {
+            const dropdownContent = element.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                dropdownContent.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        // Função para Abrir o Modal
+        function openModal() {
+            const modal = document.getElementById('myModal');
+            modal.classList.add('open');
+        }
+
+        // Função para Fechar o Modal
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.classList.remove('open');
+        }
+
+        // Função para Mostrar o Toast
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+
+            // Define cor do toast baseado no tipo de feedback
+            if (type === 'error') {
+                toast.style.backgroundColor = 'var(--color-error)';
+            } else {
+                toast.style.backgroundColor = 'var(--color-success)';
+            }
+
+            container.appendChild(toast);
+            toast.style.display = 'block';
+
+            // Remove o toast após a animação (5 segundos)
+            setTimeout(() => {
+                toast.style.display = 'none';
+                container.removeChild(toast);
+            }, 5000);
+        }
+
+        // Simulação de Validação Visual do Formulário
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const emailInput = document.getElementById('email');
+            const msgInput = document.getElementById('mensagem');
+            const emailFeedback = document.getElementById('emailFeedback');
+            let isValid = true;
+
+            // 1. Resetar estados
+            emailInput.classList.remove('is-invalid', 'is-valid');
+            msgInput.classList.remove('is-invalid', 'is-valid');
+            emailFeedback.style.display = 'none';
+
+            // 2. Validação de Email (Regex Simples)
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput.value)) {
+                emailInput.classList.add('is-invalid');
+                emailFeedback.style.display = 'block';
+                isValid = false;
+            } else {
+                emailInput.classList.add('is-valid');
+            }
+
+            // 3. Validação de Mensagem (Mínimo 10 caracteres)
+            if (msgInput.value.length < 10) {
+                msgInput.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                msgInput.classList.add('is-valid');
+            }
+
+
+            // 4. Feedback final
+            if (isValid) {
+                showToast('Solicitação de orçamento enviada com sucesso! ');
+                // Limpar formulário após 1 segundo (simulação)
+                setTimeout(() => form.reset(), 1000);
+            } else {
+                showToast('Falha na validação do formulário. Corrija os erros.', 'error');
+            }
+        }
+    </script>
+
+</body>
+</html>
